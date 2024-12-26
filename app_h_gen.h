@@ -4,8 +4,8 @@
  * http://www.gnu.org/software/gengen
  */
 
-#ifndef TA_ANDROID_GEN_CLASS_H
-#define TA_ANDROID_GEN_CLASS_H
+#ifndef APP_H_GEN_CLASS_H
+#define APP_H_GEN_CLASS_H
 
 #include <string>
 #include <iostream>
@@ -13,30 +13,30 @@
 using std::string;
 using std::ostream;
 
-class ta_Android_gen_class
+class app_h_gen_class
 {
  protected:
 
  public:
-  ta_Android_gen_class()
+  app_h_gen_class()
   {
   }
   
 
-  void generate_ta_Android(ostream &stream, unsigned int indent = 0)
+  void generate_app_h(ostream &stream, unsigned int indent = 0)
   {
     string indent_str (indent, ' ');
     indent = 0;
   
-    stream << "LOCAL_PATH := $(call my-dir)";
+    stream << "#ifndef _APP_H_";
+    stream << "\n";
+    stream << indent_str;
+    stream << "#define _APP_H_";
     stream << "\n";
     stream << indent_str;
     stream << "\n";
     stream << indent_str;
-    stream << "local_module := 8aaaf200-2450-11e4-abe2-0002a5d5c51b.ta";
-    stream << "\n";
-    stream << indent_str;
-    stream << "include $(BUILD_OPTEE_MK)";
+    stream << "#endif /* !_APP_H_ */";
     stream << "\n";
     stream << indent_str;
     stream << "\n";
@@ -44,4 +44,4 @@ class ta_Android_gen_class
   }
 };
 
-#endif // TA_ANDROID_GEN_CLASS_H
+#endif // APP_H_GEN_CLASS_H

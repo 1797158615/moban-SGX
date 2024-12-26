@@ -1,14 +1,12 @@
 #include <iostream>
 #include <string>
 #include <fstream>  // 添加文件流的头文件
-#include "a_Android.h"
-#include "a_CMakeList.h"
-#include "a_Makefile.h"
-#include "ta_Android.h"
-#include "ta_Makefile.h"
-#include "ta_sub.h"
-#include "ta_user_ta_header_defines.h"
-#include "host_Makefile.h"
+#include "enclave_lds.h"
+#include "app_h_gen.h"
+#include "enclave_h.h"
+#include "makefile.h"
+#include "enclave_config.h"
+
 
 using namespace std;
 
@@ -22,10 +20,10 @@ int main(int argc, char* argv[])
     
     string path = "./";
     path += argv[1];
-    path += "/Android.mk";
+    path += "/App/App.h";
 
     // 创建 a_Android_gen_class 对象
-    a_Android_gen_class a_Android(argv[1]);
+    app_h_gen_class app_h;
     
     // 使用 ofstream 进行文件操作
     ofstream ofs(path);  // 打开文件
@@ -35,108 +33,66 @@ int main(int argc, char* argv[])
     }
     
     // 调用生成函数，修改为接受 ofstream
-    a_Android.generate_a_Android(ofs);  // 需要确保该函数接受 ofstream 类型
+    app_h.generate_app_h(ofs);  // 需要确保该函数接受 ofstream 类型
     ofs.close();  // 关闭文件流
     
     //生成CMakeLists.txt
     path = "./";
     path += argv[1];
-    path += "/CMakeLists.txt";
+    path += "/Enclave/Enclave.h";
     
-    a_CMakeList_gen_class a_CMakeList(argv[1]);
-    ofstream a_CMofs(path);
-    if (!a_CMofs) {  // 检查文件是否成功打开
+    enclave_h_gen_class enclave_h;
+    ofstream enlcaveh(path);
+    if (!enlcaveh) {  // 检查文件是否成功打开
         cerr << "无法打开文件: " << path << endl;
         return 1;
     }
-    a_CMakeList.generate_a_CMakeList(a_CMofs);
-    a_CMofs.close();
+    enclave_h.generate_enclave_h(enlcaveh);
+    enlcaveh.close();
     
     //生成Makefile
     path = "./";
     path += argv[1];
-    path += "/Makefile";
+    path += "/Enclave/Enclave.lds";
     
-    a_Makefile_gen_class a_Makefile;
-    ofstream a_Mofs(path);
-    if (!a_Mofs) {  // 检查文件是否成功打开
+    enclave_lds_gen_class enclave_lds;
+    ofstream enclavel(path);
+    if (!enclavel) {  // 检查文件是否成功打开
         cerr << "无法打开文件: " << path << endl;
         return 1;
     }
-    a_Makefile.generate_a_Makefile(a_Mofs);
-    a_Mofs.close();
+    enclave_lds.generate_enclave_lds(enclavel);
+    enclavel.close();
     
     //生成ta下的Android.mk
     path = "./";
     path += argv[1];
-    path += "/ta/Android.mk";
+    path += "/Enclave/Enclave.config.xml";
     
-    ta_Android_gen_class ta_Android;
-    ofstream ta_aofs(path);
-    if (!ta_aofs) {  // 检查文件是否成功打开
+    enclave_config_gen_class enclave_c;
+    ofstream enclavec(path);
+    if (!enclavec) {  // 检查文件是否成功打开
         cerr << "无法打开文件: " << path << endl;
         return 1;
     }
-    ta_Android.generate_ta_Android(ta_aofs);
-    ta_aofs.close();
+    enclave_c.generate_enclave_config(enclavec);
+    enclavec.close();
     
     
     //生成ta下的Makefile
     path = "./";
     path += argv[1];
-    path += "/ta/Makefile";
+    path += "/Makefile";
     
-    ta_Makefile_gen_class  ta_Makefile;
-    ofstream ta_mofs(path);
-    if (!ta_mofs) {  // 检查文件是否成功打开
+    makefile_gen_class  makefile;
+    ofstream mf(path);
+    if (!mf) {  // 检查文件是否成功打开
         cerr << "无法打开文件: " << path << endl;
         return 1;
     }
-    ta_Makefile.generate_ta_Makefile(ta_mofs);
-    ta_mofs.close();
+    makefile.generate_makefile(mf);
+    mf.close();
     
-    
-    //生成ta下的Makefile
-    path = "./";
-    path += argv[1];
-    path += "/ta/sub.mk";
-    
-    ta_sub_gen_class  ta_sub(argv[1]);
-    ofstream ta_sofs(path);
-    if (!ta_sofs) {  // 检查文件是否成功打开
-        cerr << "无法打开文件: " << path << endl;
-        return 1;
-    }
-    ta_sub.generate_ta_sub(ta_sofs);
-    ta_sofs.close();
-    
-    //生成ta下的user_ta_header_defines.h
-    path = "./";
-    path += argv[1];
-    path += "/ta/user_ta_header_defines.h";
-    
-    ta_user_ta_header_defines_gen_class  ta_user(argv[1]);
-    ofstream ta_uofs(path);
-    if (!ta_uofs) {  // 检查文件是否成功打开
-        cerr << "无法打开文件: " << path << endl;
-        return 1;
-    }
-    ta_user.generate_ta_user_ta_header_defines(ta_uofs);
-    ta_uofs.close();
-    
-    //生成host下的Makefile
-    path = "./";
-    path += argv[1];
-    path += "/host/Makefile";
-    
-    host_Makefile_gen_class  host_makefile(argv[1]);
-    ofstream host_mofs(path);
-    if (!host_mofs) {  // 检查文件是否成功打开
-        cerr << "无法打开文件: " << path << endl;
-        return 1;
-    }
-    host_makefile.generate_host_Makefile(host_mofs);
-    host_mofs.close();
     
     return 0;
 }
